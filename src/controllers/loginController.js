@@ -1,4 +1,3 @@
-// const { generateToken } = require('../helpers/JWT');
 const { loginService } = require('../services');
 
 const loginPost = async (req, res) => {
