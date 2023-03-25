@@ -6,6 +6,13 @@ const categoriesPost = async (req, res) => {
   res.status(status).json(response);
 };
 
+const getAllCategories = async (req, res) => {
+  const { status, response } = await categoriesService.getAllCategories();
+
+  res.status(status).json(response);
+};
+
 module.exports = {
   categoriesPost,
+  getAllCategories,
 };
