@@ -1,6 +1,12 @@
 const { Category } = require('../models');
 
-const categoriesPost = async ({ name }) => ({ status: 201, response: { name } });
+const categoriesPost = async ({ name }) => {
+  await Category.create({ name });
+
+  const category = await Category.findOne({ where: { name } });
+
+  return { status: 201, response: category };
+};
 
 const getAllCategories = async () => {
   const categories = await Category.findAll();
