@@ -7,7 +7,14 @@ const categoriesValidation = require('../middlewares/categoriesValidation');
 
 const router = express.Router();
 
-router.post('/', tokenValidation, postValidation, categoriesValidation, postController.createPost);
+router.post(
+    '/', 
+    tokenValidation, 
+    postValidation, 
+    categoriesValidation.validateField,
+    categoriesValidation.validateCategory, 
+    postController.createPost,
+);
 router.get('/', tokenValidation, postController.getAllPost);
 router.get('/:id', tokenValidation, postController.getPostById);
 router.put('/:id', tokenValidation, editPostValidation, postController.editPost);

@@ -12,6 +12,10 @@ const userValidation = Joi.object({
   image: Joi.string(),
 });
 
+const categoriesValidation = Joi.object({
+  name: Joi.string().required(),
+});
+
 const postValidation = Joi.object({
   title: Joi.string().required(),
   content: Joi.string().required(),
@@ -26,6 +30,7 @@ const editPostValidation = Joi.object({
 module.exports = {
   loginValidation,
   userValidation,
+  categoriesValidation,
   postValidation,
   editPostValidation,
 };
