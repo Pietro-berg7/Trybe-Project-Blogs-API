@@ -6,4 +6,20 @@ const userPost = async (req, res) => {
   res.status(status).json(response);
 };
 
-module.exports = { userPost };
+const getAllUsers = async (req, res) => {
+  const { status, response } = await userService.getAllUsers(req.body);
+
+  res.status(status).json(response);
+};
+
+const getUserById = async (req, res) => {
+  const { status, response } = await userService.getUserById(req.params.id);
+
+  res.status(status).json(response);
+};
+
+module.exports = { 
+  userPost,
+  getAllUsers,
+  getUserById,
+};
