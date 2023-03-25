@@ -5,9 +5,10 @@ const createPost = async ({ title, content, categoryIds, userId }) => {
   const newBlogPost = await BlogPost.create({ title, content, userId });
   const postId = newBlogPost.dataValues.id;
   
-  await Promise.all(categoryIds
-    .map((id) => PostCategory.create({ postId, categoryId: id }, { transaction })));
-
+  await Promise.all(
+    categoryIds.map((categoryId) => PostCategory.create({ postId, categoryId }, { transaction })),
+  );
+  
   await transaction.commit();
   
   return newBlogPost;

@@ -1,6 +1,4 @@
-const {
-  categoriesValidation,
-} = require('../helpers/schemas');
+const { categoriesValidation } = require('../helpers/schemas');
 const { Category } = require('../models');
 
 const validateName = async (req, res, next) => {
@@ -23,16 +21,14 @@ const validateField = async (req, res, next) => {
 
 const validateCategory = async (req, res, next) => {
   const { categoryIds } = req.body;
-
-  const doesCategoryExist = await Promise.all(categoryIds
-    .map((el) => Category.findOne({ where: { id: el } })));
-
-  const validate = doesCategoryExist.some((el) => el === null);
+  const categoriesFound = await Promise.all(categoryIds
+    .map((categoryId) => Category.findOne({ where: { id: categoryId } })));
+  const validate = categoriesFound.some((category) => category === null);
 
   if (validate) {
     return res.status(400).json({ message: 'one or more "categoryIds" not found' });
-  } 
-
+  }
+  
   next();
 };
 
