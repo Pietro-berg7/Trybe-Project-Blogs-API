@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { User } = require('../models');
 
 const secret = process.env.JWT_SECRET;
 
@@ -22,7 +23,16 @@ const authenticateToken = (token) => {
   }
 };
 
+const getUser = async (token) => {
+  const { data } = jwt.verify(token, secret);
+  const { email } = data;
+  const user = await User.findOne({ where: { email } });
+  const userId = user.dataValues.id;  
+  return userId;
+};
+
 module.exports = { 
   generateToken,
   authenticateToken,
+  getUser,
 };

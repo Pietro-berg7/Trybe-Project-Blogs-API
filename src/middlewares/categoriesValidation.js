@@ -1,13 +1,15 @@
-const {
-  categoriesValidation,
-} = require('../helpers/schemas');
+const { Category } = require('../models');
 
 module.exports = async (req, res, next) => {
-  const input = req.body;
+  const { categoryIds } = req.body;
+  const categoriesFound = await Promise.all(categoryIds
+    .map((categoryId) => Category.findOne({ where: { id: categoryId } })));
 
-  const { error } = categoriesValidation.validate(input);
+  const validate = categoriesFound.some((category) => category === null);
 
-  if (error) return res.status(400).json({ message: error.message });
-
+  if (validate) {
+    return res.status(400).json({ message: 'one or more "categoryIds" not found' });
+  }
+  
   next();
 };

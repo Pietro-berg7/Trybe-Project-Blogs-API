@@ -1,9 +1,18 @@
+const { getUser } = require('../helpers/JWT');
 const { postService } = require('../services');
 
 const createPost = async (req, res) => {
-  const { status, response } = await postService.createPost(req.body, req.headers);
+  const authorizationHeader = req.headers.authorization; 
+  const { title, content, categoryIds } = req.body;
+  const userId = await getUser(authorizationHeader);
+  const post = await postService.createPost({ 
+    title, 
+    content, 
+    categoryIds, 
+    userId, 
+  });
 
-  res.status(status).json(response);
+  return res.status(201).json(post);
 };
 
 const getAllPost = async (req, res) => {
@@ -17,8 +26,17 @@ const getPostById = async (req, res) => {
   res.status(status).json(response);
 };
 
+const editPost = async (req, res) => {
+  const { status, response } = await postService.editPost(
+    req.body, req.params.id, req.headers.authorization,
+  );
+
+  res.status(status).json(response);
+};
+
 module.exports = {
   createPost,
   getAllPost,
   getPostById,
+  editPost,
 };
