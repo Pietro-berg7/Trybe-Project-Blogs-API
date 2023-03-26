@@ -42,16 +42,33 @@ const getPostById = async (id) => {
     ],
   });
 
-  if (!post) return { status: 404, response: { message: 'Post does not exist' } };
-
-  return { status: 200, response: post };
+  return post;
 };
 
-const editPost = async () => {};
+const editPost = async ({ postId, title, content }) => {
+  await BlogPost.update({ title, content }, { where: { id: postId } });
+  const post = await BlogPost.findOne({
+    where: { id: postId },
+    include: [
+      {
+        model: User, as: 'user', attributes: { exclude: 'password' },
+      },
+      {
+        model: Category, as: 'categories', through: { attributes: [] },
+      },
+    ],
+  });
+  return post;
+};
+
+const deletePost = async (id) => {
+  await BlogPost.destroy({ where: { id } });
+};
 
 module.exports = {
   createPost,
   getAllPost,
   getPostById,
   editPost,
+  deletePost,
 };

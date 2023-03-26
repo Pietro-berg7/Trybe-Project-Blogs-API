@@ -22,16 +22,38 @@ const getAllPost = async (req, res) => {
 };
 
 const getPostById = async (req, res) => {
-  const { status, response } = await postService.getPostById(req.params.id);
-  res.status(status).json(response);
+  const { id } = req.params;
+  const blogPost = await postService.getPostById(id);
+  if (!blogPost) {
+  return res.status(404).json({ message: 'Post does not exist' });
+  }
+  return res.status(200).json(blogPost);
 };
 
 const editPost = async (req, res) => {
-  const { status, response } = await postService.editPost(
-    req.body, req.params.id, req.headers.authorization,
-  );
+  const { id: postId } = req.params;
+  const { title, content } = req.body;
+  const userId = await getUser(req.headers.authorization);
+  const blogPost = await postService.getPostById(postId);
+  if (blogPost.dataValues.userId !== userId) {
+    return res.status(401).json({ message: 'Unauthorized user' });
+  }
+  const updatedPost = await postService.editPost({ postId, title, content });
+  res.json(updatedPost);
+};
 
-  res.status(status).json(response);
+const deletePost = async (req, res) => {
+  const { id: postId } = req.params;
+  const userId = await getUser(req.headers.authorization);
+  const blogPost = await postService.getPostById(postId);
+  if (!blogPost) {
+    return res.status(404).json({ message: 'Post does not exist' });
+  }
+  if (blogPost.dataValues.userId !== userId) {
+    return res.status(401).json({ message: 'Unauthorized user' });
+  }
+  await postService.deletePost(postId);
+  return res.status(204).end();
 };
 
 module.exports = {
@@ -39,4 +61,5 @@ module.exports = {
   getAllPost,
   getPostById,
   editPost,
+  deletePost,
 };

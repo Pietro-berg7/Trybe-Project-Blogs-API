@@ -18,5 +18,6 @@ router.post(
 router.get('/', tokenValidation, postController.getAllPost);
 router.get('/:id', tokenValidation, postController.getPostById);
 router.put('/:id', tokenValidation, editPostValidation, postController.editPost);
+router.delete('/:id', tokenValidation, postController.deletePost);
 
 module.exports = router;
