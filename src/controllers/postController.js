@@ -56,10 +56,13 @@ const deletePost = async (req, res) => {
   return res.status(204).end();
 };
 
+const searchPost = async () => {};
+
 module.exports = {
   createPost,
   getAllPost,
   getPostById,
   editPost,
   deletePost,
+  searchPost,
 };

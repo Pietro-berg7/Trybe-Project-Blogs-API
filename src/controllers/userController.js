@@ -1,3 +1,4 @@
+const { getUser } = require('../helpers/JWT');
 const { userService } = require('../services');
 
 const userPost = async (req, res) => {
@@ -18,8 +19,16 @@ const getUserById = async (req, res) => {
   res.status(status).json(response);
 };
 
+const deleteUser = async (req, res) => {
+  await userService
+    .deleteUser(await getUser(req.headers.authorization));
+
+  res.status(204).end();
+};
+
 module.exports = { 
   userPost,
   getAllUsers,
   getUserById,
+  deleteUser,
 };
